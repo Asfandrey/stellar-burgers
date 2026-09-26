@@ -1,19 +1,30 @@
 import { AppHeader } from '@components';
 import { ConstructorPage } from '@pages';
 import { Preloader } from '@ui';
+import { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
+import { getIngredients } from '../../services/slices/ingredientsSlice';
+import { useDispatch, useSelector } from '../../services/store';
+
 import type { AppContentProps } from './type';
-import type { TIngredient } from '@utils-types';
 
 import '../../index.css';
 
 import styles from './app.module.css';
 
 const App = (): React.JSX.Element => {
-  const ingredients: TIngredient[] = [];
-  const isIngredientsLoading = false;
-  const ingredientsError = null;
+  const dispatch = useDispatch();
+
+  const ingredients = useSelector((state) => state.ingredients.ingredients);
+
+  const isIngredientsLoading = useSelector((state) => state.ingredients.isLoading);
+
+  const ingredientsError = useSelector((state) => state.ingredients.error);
+
+  useEffect(() => {
+    void dispatch(getIngredients());
+  }, [dispatch]);
 
   return (
     <div className={styles.app}>
