@@ -1,10 +1,21 @@
 import { AppHeader } from '@components';
-import { ConstructorPage } from '@pages';
+import {
+  ConstructorPage,
+  Feed,
+  Login,
+  Register,
+  ForgotPassword,
+  ResetPassword,
+  Profile,
+  ProfileOrders,
+  NotFound404,
+} from '@pages';
 import { Preloader } from '@ui';
 import { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 import { getIngredients } from '../../services/slices/ingredientsSlice';
+import { getUser } from '../../services/slices/userSlice';
 import { useDispatch, useSelector } from '../../services/store';
 
 import type { AppContentProps } from './type';
@@ -24,6 +35,8 @@ const App = (): React.JSX.Element => {
 
   useEffect(() => {
     void dispatch(getIngredients());
+    // есть ли авторизованный пользователь.
+    void dispatch(getUser());
   }, [dispatch]);
 
   return (
@@ -71,10 +84,24 @@ const AppContent = ({
 
 const RouteComponent = (): React.JSX.Element => {
   return (
-    <>
-      <Routes>
-        <Route path="/" element={<ConstructorPage />} />
-      </Routes>
-    </>
+    <Routes>
+      <Route path="/" element={<ConstructorPage />} />
+
+      <Route path="/feed" element={<Feed />} />
+
+      <Route path="/login" element={<Login />} />
+
+      <Route path="/register" element={<Register />} />
+
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+
+      <Route path="/reset-password" element={<ResetPassword />} />
+
+      <Route path="/profile" element={<Profile />} />
+
+      <Route path="/profile/orders" element={<ProfileOrders />} />
+
+      <Route path="*" element={<NotFound404 />} />
+    </Routes>
   );
 };
