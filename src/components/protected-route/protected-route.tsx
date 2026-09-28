@@ -3,7 +3,13 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
 import { useSelector } from '../../services/store';
 
-export const ProtectedRoute = (): React.JSX.Element => {
+type TProtectedRouteProps = {
+  onlyUnAuth?: boolean;
+};
+
+export const ProtectedRoute = ({
+  onlyUnAuth = false,
+}: TProtectedRouteProps): React.JSX.Element => {
   // Получаем из Redux данные текущего пользователя.
   const user = useSelector((state) => state.user.user);
 
@@ -14,7 +20,11 @@ export const ProtectedRoute = (): React.JSX.Element => {
     return <Preloader />;
   }
 
-  if (!user) {
+  if (onlyUnAuth && user) {
+    return <Navigate to="/" replace />;
+  }
+
+  if (!onlyUnAuth && !user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
   return <Outlet />;

@@ -88,19 +88,20 @@ const RouteComponent = (): React.JSX.Element => {
 
       <Route path="/feed" element={<Feed />} />
 
-      <Route path="/login" element={<Login />} />
+      {/* Маршруты только для НЕавторизованных пользователей. */}
+      <Route element={<ProtectedRoute onlyUnAuth />}>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+      </Route>
 
-      <Route path="/register" element={<Register />} />
-
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-
-      <Route path="/reset-password" element={<ResetPassword />} />
-
+      {/* Маршруты только для авторизованных пользователей. */}
       <Route element={<ProtectedRoute />}>
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile/orders" element={<ProfileOrders />} />
       </Route>
-
+      {/* Любой неизвестный адрес. */}
       <Route path="*" element={<NotFound404 />} />
     </Routes>
   );
