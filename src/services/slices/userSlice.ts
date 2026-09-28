@@ -1,7 +1,13 @@
-import { getUserApi, loginUserApi, registerUserApi } from '@api';
+import {
+  getUserApi,
+  loginUserApi,
+  logoutApi,
+  registerUserApi,
+  updateUserApi,
+} from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { setCookie } from '../../utils/cookie';
+import { deleteCookie, setCookie } from '../../utils/cookie';
 
 import type { TUser } from '@utils-types';
 
@@ -55,6 +61,24 @@ export const registerUser = createAsyncThunk(
     return response;
   }
 );
+
+export const updateUser = createAsyncThunk(
+  'user/updateUser',
+  async (data: { name?: string; email?: string; password?: string }) => {
+    const response = await updateUserApi(data);
+
+    return response;
+  }
+);
+
+export const logoutUser = createAsyncThunk('user/logoutUser', async () => {
+  // Сообщаем серверу, что текущая сессия завершается.
+  await logoutApi();
+
+  // После успешного ответа удаляем токены на клиенте.
+  localStorage.removeItem('refreshToken');
+  deleteCookie('accessToken');
+});
 
 const userSlice = createSlice({
   name: 'user',
@@ -128,6 +152,52 @@ const userSlice = createSlice({
         state.user = null;
 
         state.error = new Error(action.error.message ?? 'Не удалось зарегистрироваться');
+      })
+
+      // Обновление данных пользователя.
+      .addCase(updateUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+
+      // Данные пользователя успешно обновлены.
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+
+        // Заменяем старые данные пользователя в Redux новыми.
+        state.user = action.payload.user;
+      })
+
+      // Обновить данные пользователя не удалось.
+      .addCase(updateUser.rejected, (state, action) => {
+        state.isLoading = false;
+
+        state.error = new Error(
+          action.error.message ?? 'Не удалось обновить данные пользователя'
+        );
+      })
+
+      // Начался выход из учётной записи.
+      .addCase(logoutUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+
+      // Выход выполнен успешно.
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.isLoading = false;
+
+        // Пользователь больше не авторизован.
+        state.user = null;
+      })
+
+      // Выйти из учётной записи не удалось.
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.isLoading = false;
+
+        state.error = new Error(
+          action.error.message ?? 'Не удалось выйти из учётной записи'
+        );
       });
   },
 });
