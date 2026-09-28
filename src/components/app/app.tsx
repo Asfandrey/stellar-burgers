@@ -17,6 +17,7 @@ import { Routes, Route } from 'react-router-dom';
 import { getIngredients } from '../../services/slices/ingredientsSlice';
 import { getUser } from '../../services/slices/userSlice';
 import { useDispatch, useSelector } from '../../services/store';
+import { ProtectedRoute } from '../protected-route/protected-route';
 
 import type { AppContentProps } from './type';
 
@@ -53,8 +54,6 @@ const App = (): React.JSX.Element => {
 
 export default App;
 
-/* Маршруты показываются только когда ингредиенты загружены: без них не
-   отрисовать ни конструктор, ни состав заказа. */
 const AppContent = ({
   ingredients,
   isLoading,
@@ -97,9 +96,10 @@ const RouteComponent = (): React.JSX.Element => {
 
       <Route path="/reset-password" element={<ResetPassword />} />
 
-      <Route path="/profile" element={<Profile />} />
-
-      <Route path="/profile/orders" element={<ProfileOrders />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/profile/orders" element={<ProfileOrders />} />
+      </Route>
 
       <Route path="*" element={<NotFound404 />} />
     </Routes>
