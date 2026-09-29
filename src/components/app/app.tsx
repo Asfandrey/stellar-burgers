@@ -1,4 +1,4 @@
-import { AppHeader } from '@components';
+import { AppHeader, IngredientDetails, Modal } from '@components';
 import {
   ConstructorPage,
   Feed,
@@ -12,7 +12,13 @@ import {
 } from '@pages';
 import { Preloader } from '@ui';
 import { useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import {
+  Routes,
+  Route,
+  useLocation,
+  useNavigate,
+  type Location,
+} from 'react-router-dom';
 
 import { getIngredients } from '../../services/slices/ingredientsSlice';
 import { getUser } from '../../services/slices/userSlice';
@@ -82,27 +88,60 @@ const AppContent = ({
 };
 
 const RouteComponent = (): React.JSX.Element => {
+  // location содержит информацию о текущем URL.
+  const location = useLocation();
+
+  // navigate нужен для закрытия модального окна:
+  // возвращаем пользователя назад на страницу, с которой он открыл ингредиент.
+  const navigate = useNavigate();
+
+  const backgroundLocation = (location.state as { background?: Location } | null)
+    ?.background;
+
+  const closeModal = (): void => {
+    void navigate(-1);
+  };
+
   return (
-    <Routes>
-      <Route path="/" element={<ConstructorPage />} />
+    <>
+      <Routes location={backgroundLocation ?? location}>
+        <Route path="/" element={<ConstructorPage />} />
 
-      <Route path="/feed" element={<Feed />} />
+        <Route path="/feed" element={<Feed />} />
 
-      {/* Маршруты только для НЕавторизованных пользователей. */}
-      <Route element={<ProtectedRoute onlyUnAuth />}>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-      </Route>
+        {/* Прямой переход по адресу /ingredients/:id. */}
+        <Route path="/ingredients/:id" element={<IngredientDetails />} />
 
-      {/* Маршруты только для авторизованных пользователей. */}
-      <Route element={<ProtectedRoute />}>
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/profile/orders" element={<ProfileOrders />} />
-      </Route>
-      {/* Любой неизвестный адрес. */}
-      <Route path="*" element={<NotFound404 />} />
-    </Routes>
+        {/* Маршруты только для НЕавторизованных пользователей. */}
+        <Route element={<ProtectedRoute onlyUnAuth />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+        </Route>
+
+        {/* Маршруты только для авторизованных пользователей. */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/orders" element={<ProfileOrders />} />
+        </Route>
+        {/* Любой неизвестный адрес. */}
+        <Route path="*" element={<NotFound404 />} />
+      </Routes>
+
+      {/* Этот Routes существует только для модальных маршрутов. */}
+      {backgroundLocation && (
+        <Routes>
+          <Route
+            path="/ingredients/:id"
+            element={
+              <Modal title="Детали ингредиента" onClose={closeModal}>
+                <IngredientDetails />
+              </Modal>
+            }
+          />
+        </Routes>
+      )}
+    </>
   );
 };
