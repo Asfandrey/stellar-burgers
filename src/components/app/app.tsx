@@ -127,6 +127,7 @@ const RouteComponent = (): React.JSX.Element => {
         <Route element={<ProtectedRoute />}>
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/orders" element={<ProfileOrders />} />
+          <Route path="/profile/orders/:number" element={<OrderInfo />} />
         </Route>
         {/* Любой неизвестный адрес. */}
         <Route path="*" element={<NotFound404 />} />
@@ -145,6 +146,14 @@ const RouteComponent = (): React.JSX.Element => {
           />
           <Route
             path="/feed/:number"
+            element={
+              <Modal title="" onClose={closeModal}>
+                <OrderInfo />
+              </Modal>
+            }
+          />
+          <Route
+            path="/profile/orders/:number"
             element={
               <Modal title="" onClose={closeModal}>
                 <OrderInfo />

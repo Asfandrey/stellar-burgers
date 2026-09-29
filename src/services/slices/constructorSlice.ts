@@ -78,10 +78,21 @@ const constructorSlice = createSlice({
       state.ingredients[index + 1] = currentIngredient;
       state.ingredients[index] = nextIngredient;
     },
+
+    // Полностью очищаем конструктор после успешного оформления заказа.
+    clearConstructor: (state) => {
+      state.bun = null;
+      state.ingredients = [];
+    },
   },
 });
 
-export const { addIngredient, removeIngredient, moveIngredientUp, moveIngredientDown } =
-  constructorSlice.actions;
+export const {
+  addIngredient,
+  removeIngredient,
+  moveIngredientUp,
+  moveIngredientDown,
+  clearConstructor,
+} = constructorSlice.actions;
 
 export const constructorReducer = constructorSlice.reducer;
