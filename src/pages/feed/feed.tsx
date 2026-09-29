@@ -1,16 +1,26 @@
 import { Preloader } from '@ui';
 import { FeedUI } from '@ui-pages';
+import { useEffect } from 'react';
 
-import type { TOrder } from '@utils-types';
+import { getFeeds } from '../../services/slices/feedSlice';
+import { useDispatch, useSelector } from '../../services/store';
 
 export const Feed = (): React.JSX.Element => {
-  // TODO: Взять переменную из стора
-  const orders: TOrder[] = [];
+  const dispatch = useDispatch();
+
+  // Получаем заказы публичной ленты из Redux.
+  const orders = useSelector((state) => state.feed.orders);
+
+  // При первом открытии страницы запрашиваем ленту заказов.
+  useEffect(() => {
+    void dispatch(getFeeds());
+  }, [dispatch]);
 
   const handleGetFeeds = (): void => {
-    // TODO: Запросить ленту заказов
+    void dispatch(getFeeds());
   };
 
+  // Пока заказы ещё не получены, показываем загрузчик.
   if (!orders.length) {
     return <Preloader />;
   }

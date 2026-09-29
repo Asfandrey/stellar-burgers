@@ -1,4 +1,4 @@
-import { AppHeader, IngredientDetails, Modal } from '@components';
+import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import {
   ConstructorPage,
   Feed,
@@ -109,6 +109,9 @@ const RouteComponent = (): React.JSX.Element => {
 
         <Route path="/feed" element={<Feed />} />
 
+        {/* Прямой переход по адресу /feed/:number. */}
+        <Route path="/feed/:number" element={<OrderInfo />} />
+
         {/* Прямой переход по адресу /ingredients/:id. */}
         <Route path="/ingredients/:id" element={<IngredientDetails />} />
 
@@ -137,6 +140,14 @@ const RouteComponent = (): React.JSX.Element => {
             element={
               <Modal title="Детали ингредиента" onClose={closeModal}>
                 <IngredientDetails />
+              </Modal>
+            }
+          />
+          <Route
+            path="/feed/:number"
+            element={
+              <Modal title="" onClose={closeModal}>
+                <OrderInfo />
               </Modal>
             }
           />
