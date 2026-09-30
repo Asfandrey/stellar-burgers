@@ -1,6 +1,7 @@
 import { Preloader } from '@ui';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
+import { selectIsAuthChecked, selectUser } from '../../services/selectors';
 import { useSelector } from '../../services/store';
 
 type TProtectedRouteProps = {
@@ -11,9 +12,9 @@ export const ProtectedRoute = ({
   onlyUnAuth = false,
 }: TProtectedRouteProps): React.JSX.Element => {
   // Получаем из Redux данные текущего пользователя.
-  const user = useSelector((state) => state.user.user);
+  const user = useSelector(selectUser);
 
-  const isAuthChecked = useSelector((state) => state.user.isAuthChecked);
+  const isAuthChecked = useSelector(selectIsAuthChecked);
   const location = useLocation();
 
   if (!isAuthChecked) {

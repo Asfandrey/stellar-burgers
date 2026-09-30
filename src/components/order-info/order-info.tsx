@@ -2,6 +2,7 @@ import { Preloader, OrderInfoUI } from '@ui';
 import { useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 
+import { selectIngredients, selectOrderData } from '../../services/selectors';
 import { getOrderByNumber } from '../../services/slices/orderSlice';
 import { useDispatch, useSelector } from '../../services/store';
 
@@ -14,9 +15,9 @@ export const OrderInfo = (): React.JSX.Element => {
   const dispatch = useDispatch();
 
   // Конкретный заказ теперь берём из orderSlice.
-  const orderData = useSelector((state) => state.order.orderData);
+  const orderData = useSelector(selectOrderData);
 
-  const ingredients = useSelector((state) => state.ingredients.ingredients);
+  const ingredients = useSelector(selectIngredients);
 
   useEffect(() => {
     if (!number) return;

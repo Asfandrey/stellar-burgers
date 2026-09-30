@@ -20,6 +20,11 @@ import {
   type Location,
 } from 'react-router-dom';
 
+import {
+  selectIngredients,
+  selectIngredientsError,
+  selectIngredientsLoading,
+} from '../../services/selectors';
 import { getIngredients } from '../../services/slices/ingredientsSlice';
 import { getUser } from '../../services/slices/userSlice';
 import { useDispatch, useSelector } from '../../services/store';
@@ -34,11 +39,11 @@ import styles from './app.module.css';
 const App = (): React.JSX.Element => {
   const dispatch = useDispatch();
 
-  const ingredients = useSelector((state) => state.ingredients.ingredients);
+  const ingredients = useSelector(selectIngredients);
 
-  const isIngredientsLoading = useSelector((state) => state.ingredients.isLoading);
+  const isIngredientsLoading = useSelector(selectIngredientsLoading);
 
-  const ingredientsError = useSelector((state) => state.ingredients.error);
+  const ingredientsError = useSelector(selectIngredientsError);
 
   useEffect(() => {
     void dispatch(getIngredients());
@@ -152,14 +157,16 @@ const RouteComponent = (): React.JSX.Element => {
               </Modal>
             }
           />
-          <Route
-            path="/profile/orders/:number"
-            element={
-              <Modal title="" onClose={closeModal}>
-                <OrderInfo />
-              </Modal>
-            }
-          />
+          <Route element={<ProtectedRoute />}>
+            <Route
+              path="/profile/orders/:number"
+              element={
+                <Modal title="" onClose={closeModal}>
+                  <OrderInfo />
+                </Modal>
+              }
+            />
+          </Route>
         </Routes>
       )}
     </>

@@ -2,6 +2,7 @@ import { RegisterUI } from '@ui-pages';
 import { type SyntheticEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { selectUserError } from '../../services/selectors';
 import { registerUser } from '../../services/slices/userSlice';
 import { useDispatch, useSelector } from '../../services/store';
 
@@ -9,7 +10,7 @@ export const Register = (): React.JSX.Element => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const error = useSelector((state) => state.user.error);
+  const error = useSelector(selectUserError);
 
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');

@@ -2,6 +2,7 @@ import { LoginUI } from '@ui-pages';
 import { type SyntheticEvent, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import { selectUserError } from '../../services/selectors';
 import { loginUser } from '../../services/slices/userSlice';
 import { useDispatch, useSelector } from '../../services/store';
 
@@ -9,7 +10,7 @@ export const Login = (): React.JSX.Element => {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
-  const error = useSelector((state) => state.user.error);
+  const error = useSelector(selectUserError);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

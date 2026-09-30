@@ -2,6 +2,12 @@ import { BurgerConstructorUI } from '@ui';
 import { useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import {
+  selectConstructorItems,
+  selectOrderModalData,
+  selectOrderRequest,
+  selectUser,
+} from '../../services/selectors';
 import { clearConstructor } from '../../services/slices/constructorSlice';
 import { clearNewOrder, createOrder } from '../../services/slices/newOrderSlice';
 import { useDispatch, useSelector } from '../../services/store';
@@ -15,15 +21,15 @@ export const BurgerConstructor = (): React.JSX.Element | null => {
   const location = useLocation();
 
   // Ингредиенты, которые пользователь добавил в конструктор.
-  const constructorItems = useSelector((state) => state.constructorItems);
+  const constructorItems = useSelector(selectConstructorItems);
 
   // Данные авторизованного пользователя.
-  const user = useSelector((state) => state.user.user);
+  const user = useSelector(selectUser);
 
   // Состояние оформления нового заказа.
-  const orderRequest = useSelector((state) => state.newOrder.orderRequest);
+  const orderRequest = useSelector(selectOrderRequest);
 
-  const orderModalData = useSelector((state) => state.newOrder.orderModalData);
+  const orderModalData = useSelector(selectOrderModalData);
 
   const onOrderClick = (): void => {
     // Без булки заказ оформить нельзя.
