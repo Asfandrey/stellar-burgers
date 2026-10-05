@@ -1,5 +1,8 @@
 import { expect, test } from '@playwright/test';
 
+const bunName = 'Краторная булка N-200i';
+const ingredientName = 'Биокотлета из марсианской Магнолии';
+
 test.describe('add ingredients to constructor works correctly', function () {
   test.beforeEach(async ({ page }) => {
     // Мокаем получение списка ингредиентов.
@@ -24,9 +27,6 @@ test.describe('add ingredients to constructor works correctly', function () {
   });
 
   test('adds bun and ingredient to constructor', async ({ page }) => {
-    const bunName = 'Краторная булка N-200i';
-    const ingredientName = 'Биокотлета из марсианской Магнолии';
-
     // Находим карточку конкретной булки по её названию.
     const bunCard = page.locator('li').filter({
       hasText: bunName,
@@ -58,8 +58,6 @@ test.describe('add ingredients to constructor works correctly', function () {
   test('opens ingredient modal, displays ingredient data and closes it', async ({
     page,
   }) => {
-    const bunName = 'Краторная булка N-200i';
-
     // Находим карточку конкретной булки.
     const bunCard = page.locator('li').filter({
       hasText: bunName,
@@ -96,8 +94,6 @@ test.describe('add ingredients to constructor works correctly', function () {
   });
 
   test('closes ingredient modal by clicking overlay', async ({ page }) => {
-    const bunName = 'Краторная булка N-200i';
-
     // Находим карточку конкретной булки.
     const bunCard = page.locator('li').filter({
       hasText: bunName,
@@ -122,9 +118,6 @@ test.describe('add ingredients to constructor works correctly', function () {
   });
 
   test('creates order and clears constructor', async ({ page }) => {
-    const bunName = 'Краторная булка N-200i';
-    const ingredientName = 'Биокотлета из марсианской Магнолии';
-
     // Находим карточку булки.
     const bunCard = page.locator('li').filter({
       hasText: bunName,
